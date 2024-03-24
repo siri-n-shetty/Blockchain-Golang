@@ -1,30 +1,80 @@
-Blockchain is essentialy a pucblic database that is dirtubuted among multiple differnt peers
-It doesnt rely on trust
-Previously, in dirtibuted systems, every node would be trustworthy, 
-i.e., data coming from each and every node would have coorect data inside it 
+Blockchain essentially functions as a public database distributed across numerous peers. 
+Unlike traditional distributed systems where trust is a prerequisite and data from each node is assumed to be accurate, 
+blockchain operates on a different principle. 
+It allows for the possibility that some nodes might produce incorrect data. 
+In a blockchain system, it's possible for up to 49% of the nodes to generate inaccurate data 
+without compromising the integrity of the database. 
+This unique feature eliminates the need for trust, 
+enabling the development of innovative applications with blockchains.
 
-With blockchain however, one of the nodes could be producing incorrect data,
-i.e., 49% of your nodes could be producing i coorect data. 
-As the database now doent really need to rely on trusting, we can do really cool stuff with vlockhains 
-
-To represrnt a block inside golang, 
+---FILE: block.go---
+To represent a block inside golang, 
 we create a struct which has 
 1. hash - represents the hash of the block 
-2. data field - represtns the data which could be ledgers, documents and images
-3, previous hash - represents the last blco's hash, it allows us to link the hashes together, like in a linked list
+2. data field - represtns the data which could be ledgers, documents and images (transaction details)
+3. previous hash - represents the last block hash, it allows us to link the hashes together, like in a linked list
 each block in our blovkchain refernces the last block created indie the blockchain 
+4. nonce - a random number used in the blockchain mining process
 
-We now create a method "DeriveHash" 
-which allows us to create hash based on the previous hash information 
-bytes.Join() -> is used to join the slices of bytes together
-the first parameter on that is a two dimensional slice of bytes which is cmonined with an empty slice of bytes 
-we create the actual hash by using by sha256 hasing function 
-we then take the created hash and push it into the hash field of our Block.
+CreateBlock func: 
+This creates a new block with given data and the hash of the previous block. 
+It also runs a "proof of work" algorithm (a method of securing the blockchain) 
+to find a valid hash for the block
 
-We now create a function called CreateBlock
-This is used to createthe atcual block 
+AddBlock Method: 
+This method adds a new block to the blockchain. 
+It takes some data for the new block and attaches it to the previous block's hash. 
+Then, it appends this new block to the chain.
 
-Here, we use the Block contructor (which is a reference ot the block), 
-Inside this, we put in an empty slie of byte, we use the data fiels and convert it into a slice of bytes, and then use the prevhash
+Genesis func: 
+This function creates the very first block in the blockchain, 
+often called the "Genesis Block." It's the starting point of the entire chain.
 
-We then create a method which will allow us to add the block to the blockchain 
+InitBlockchain func: 
+This initializes the blockchain with the Genesis Block. 
+It sets up the first link in a chain before adding more blocks.
+
+---FILE: proof.go---
+Proof of Work is a mechanism to secure the blockchain
+he essential idea is to make creating new blocks difficult (thus securing the network) 
+but easy to verify for others.
+
+Difficulty: This is a measure of how hard it is to mine a new block. 
+Here, the difficulty is set to 18, meaning it's relatively difficult to find a valid hash.
+
+ProofOfWork Struct: 
+This contains the block we are trying to mine and a target, 
+which is a number that the hash of the new block must be less than to be considered valid. 
+The target adjusts with the difficulty level.
+
+InitData func: 
+This prepares the data from the block 
+along with a nonce (a number that changes with each try to get a different hash) 
+and the difficulty level, to be hashed together.
+
+Run func: 
+This is where the mining happens. 
+It starts with a nonce at 0 and increments it, 
+hashing the block's data with the nonce each time. 
+It checks if the resulting hash is less than the target. 
+If it is, mining is successful; 
+if not, it increments the nonce and tries again. 
+This loop continues until a valid hash is found.
+
+Validate func: 
+Once a block is mined, this checks if the block's hash actually meets the required conditions 
+(if it's less than the target). 
+This is important for other nodes in the network to verify that the block was correctly mined.
+
+ToHex func: 
+Converts numbers to a hexadecimal format. 
+This is used to prepare data for hashing 
+
+Summary:
+1. Take the data in a block that needs to be added to the blockchain.
+2. Add a nonce (a trial number that starts at 0) to this data.
+3. Hash the combined data and nonce.
+4. Check if the hash meets the criteria (if it's smaller than the target).
+5. If it doesn't meet the criteria, increase the nonce by 1 and go back to step 3.
+6. Repeat this process until a hash that meets the criteria is found. This means the block can now be added to the blockchain.
+7. Other nodes can quickly verify the hash meets the criteria, confirming the block's validity.
