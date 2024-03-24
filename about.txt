@@ -1,0 +1,30 @@
+Blockchain is essentialy a pucblic database that is dirtubuted among multiple differnt peers
+It doesnt rely on trust
+Previously, in dirtibuted systems, every node would be trustworthy, 
+i.e., data coming from each and every node would have coorect data inside it 
+
+With blockchain however, one of the nodes could be producing incorrect data,
+i.e., 49% of your nodes could be producing i coorect data. 
+As the database now doent really need to rely on trusting, we can do really cool stuff with vlockhains 
+
+To represrnt a block inside golang, 
+we create a struct which has 
+1. hash - represents the hash of the block 
+2. data field - represtns the data which could be ledgers, documents and images
+3, previous hash - represents the last blco's hash, it allows us to link the hashes together, like in a linked list
+each block in our blovkchain refernces the last block created indie the blockchain 
+
+We now create a method "DeriveHash" 
+which allows us to create hash based on the previous hash information 
+bytes.Join() -> is used to join the slices of bytes together
+the first parameter on that is a two dimensional slice of bytes which is cmonined with an empty slice of bytes 
+we create the actual hash by using by sha256 hasing function 
+we then take the created hash and push it into the hash field of our Block.
+
+We now create a function called CreateBlock
+This is used to createthe atcual block 
+
+Here, we use the Block contructor (which is a reference ot the block), 
+Inside this, we put in an empty slie of byte, we use the data fiels and convert it into a slice of bytes, and then use the prevhash
+
+We then create a method which will allow us to add the block to the blockchain 
