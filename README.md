@@ -31,7 +31,7 @@ If you don't have Go installed, please follow the official Go installation guide
 ```go run main.go```
 This command will compile and execute the program.
 
-### Contributing
+## Contributing
 
 Feel free to fork the repository and submit pull requests. 
 Whether you're fixing bugs, improving the documentation, or adding new features, I appreciate your contributions to this project!
